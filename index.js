@@ -12,7 +12,7 @@ app.get('/', (req, res) => {
 // user : SimpleCRUD
 // pass : m3A9cvLSUz4Tvujx
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = "mongodb+srv://SimpleCRUD:m3A9cvLSUz4Tvujx@cluster0.syoqmax.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -42,6 +42,13 @@ async function run(){
         const newUser = req.body;
         const result = await userCollection.insertOne(newUser);
         res.send(result);
+    })
+
+    app.delete('/users/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)};
+      const result = await userCollection.deleteOne(query);
+      res.send(result);
     })
 
     await client.db("admin").command({ping : 1})
